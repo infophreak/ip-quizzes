@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Quiz</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles for the collapsible sections */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out, padding 0.2s ease-out;
+            padding: 0 1rem; /* Adding left and right padding */
+            background-color: #1f2937; /* Gray background color for the collapsible content */
+        }
+
+        .collapsible-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f97316; /* Orange background color for the header */
+        }
+
+        .rotate {
+            transform: rotate(180deg); /* Rotates the icon 180 degrees when applied */
+        }
+
+        /* Custom darkest red background color */
+        .darkest-red {
+            background-color: #4a0404; /* Very dark red */
+        }
+
+        /* Make input text color black */
+        input[type="text"] {
+            color: #000000; /* Set text color to black */
+        }
+
+        /* Center image and add margin */
+        .centered-image {
+            display: flex;
+            justify-content: center; /* Center the image horizontally */
+            margin-top: 1rem; /* Add some space above the image */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white"> <!-- Dark background with white text -->
+
+    <div class="container mx-auto mt-10">
+        <!-- Collapsible Section 1 -->
+        <div class="mb-4"> <!-- Margin bottom for spacing between sections -->
+            <!-- Header for the collapsible section -->
+            <div class="collapsible-header p-4 rounded-lg flex justify-between items-center">
+                <span>Task 1 - Introduction</span> <!-- Title for the collapsible section -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-3-7h6a1 1 0 010 2H7a1 1 0 110-2z" clip-rule="evenodd" />
+                </svg> <!-- Icon for expanding/collapsing the section -->
+            </div>
+            <!-- Content that will be collapsed/expanded -->
+            <div class="collapsible-content mt-2 rounded-lg">
+                <!-- Centered and padded image -->
+                <div class="centered-image">
+                    <img src="https://tecadmin.net/wp-content/uploads/2023/06/OSI-Model-Layers.png" alt="OSI Model Layers">
+                </div>
+                <p class="py-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lacinia, nulla quis suscipit rhoncus, elit risus convallis lorem, non pulvinar mauris quam vitae magna. Ut vitae lectus cursus, maximus quam ac, varius mi. Aenean aliquet orci sapien, ac tincidunt mauris porttitor vitae. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ut orci quam. Sed accumsan, odio eget efficitur volutpat, risus ipsum pretium felis, id hendrerit sem diam eu ligula. Cras maximus vitae arcu et egestas. Donec erat augue, efficitur at volutpat et, euismod ut elit. Nam vel porttitor odio. Vestibulum porttitor massa massa, non elementum erat efficitur eget. Vestibulum ac suscipit dui.</p>
+                <!-- Input field for the quiz -->
+                <input id="q1" type="text" name="q1" class="w-full px-4 py-3 mt-4 mb-4 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your answer here" onkeydown="handleKeyDown(event, 'q1')">
+            </div>
+        </div>
+
+        <!-- Collapsible Section 2 -->
+        <div class="mb-4">
+            <!-- Header for the collapsible section -->
+            <div class="collapsible-header p-4 rounded-lg flex justify-between items-center">
+                <span>Task 2 - The OSI Model: An Overview</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-3-7h6a1 1 0 010 2H7a1 1 0 110-2z" clip-rule="evenodd" />
+                </svg> <!-- Icon for expanding/collapsing the section -->
+            </div>
+            <!-- Content that will be collapsed/expanded -->
+            <div class="collapsible-content mt-2 rounded-lg">
+                <p class="py-4">This is the content for Task 2. OSI Model Overview...</p>
+                <!-- Input field for the quiz -->
+                <input id="q2" type="text" name="q2" class="w-full px-4 py-3 mt-4 mb-4 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your answer here" onkeydown="handleKeyDown(event, 'q2')">
+            </div>
+        </div>
+
+        <!-- Add more sections as needed -->
+
+    </div>
+
+    <script>
+        // Handles the click event on each collapsible header
+        document.querySelectorAll('.collapsible-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const content = this.nextElementSibling; // Selects the content div next to the clicked header
+
+                // Toggles the max-height to either expand or collapse the content
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null; // Collapses the content
+                    this.querySelector('svg').classList.remove('rotate'); // Rotates the icon back to original position
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px'; // Expands the content based on its scroll height
+                    this.querySelector('svg').classList.add('rotate'); // Rotates the icon 180 degrees
+                }
+            });
+        });
+
+        // Handles the keydown event for the input fields (specifically for the Enter key)
+        function handleKeyDown(event, questionId) {
+            if (event.key === "Enter") { // If the Enter key is pressed
+                checkAnswer(questionId); // Call the checkAnswer function with the question ID
+            }
+        }
+
+        // Checks if the user's input matches the correct answer
+        function checkAnswer(questionId) {
+            const userInput = document.getElementById(questionId); // Gets the input field by ID
+            const userAnswer = userInput.value.trim(); // Trims any whitespace from the input
+            const correctAnswer = "correct"; // The correct answer (replace this with actual logic)
+
+            // Compares the user's input to the correct answer
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                userInput.classList.add("bg-green-500"); // Adds green background if the answer is correct
+                userInput.classList.remove("darkest-red"); // Removes the custom dark red background
+                localStorage.setItem(questionId, userAnswer); // Stores the correct answer in local storage
+            } else {
+                userInput.classList.add("darkest-red"); // Adds the custom very dark red background if the answer is incorrect
+                userInput.classList.remove("bg-green-500"); // Removes the green background
+            }
+        }
+    </script>
+</body>
+</html>

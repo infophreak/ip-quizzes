@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Choice Quiz with Secure Answer Storage</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script> <!-- Include crypto-js -->
+    <style>
+        /* Custom styles for the collapsible sections */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out, padding 0.2s ease-out;
+            padding: 0 1rem; /* Adding left and right padding */
+            background-color: #1f2937; /* Gray background color for the collapsible content */
+        }
+
+        .collapsible-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f97316; /* Orange background color for the header */
+        }
+
+        .rotate {
+            transform: rotate(180deg); /* Rotates the icon 180 degrees when applied */
+        }
+
+        /* Styling for correct and incorrect answers */
+        .correct-answer {
+            background-color: #22c55e; /* Green for correct answers */
+        }
+
+        .incorrect-answer {
+            background-color: #4a0404; /* Very dark red for incorrect answers */
+        }
+
+        /* Make input text color black */
+        input[type="text"] {
+            color: #000000; /* Set text color to black */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white"> <!-- Dark background with white text -->
+
+    <div class="container mx-auto mt-10">
+        <!-- Collapsible Section 1 -->
+        <div class="mb-4"> <!-- Margin bottom for spacing between sections -->
+            <!-- Header for the collapsible section -->
+            <div class="collapsible-header p-4 rounded-lg flex justify-between items-center">
+                <span>Question 1</span> <!-- Title for the collapsible section -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-3-7h6a1 1 0 010 2H7a1 1 0 110-2z" clip-rule="evenodd" />
+                </svg> <!-- Icon for expanding/collapsing the section -->
+            </div>
+            <!-- Content that will be collapsed/expanded -->
+            <div class="collapsible-content mt-2 rounded-lg">
+                <p class="py-4">What is the capital of France?</p>
+                <div class="flex flex-col space-y-2">
+                    <button class="p-2 rounded-lg border text-left" onclick="checkAnswer(this, 'd62f225d09595608eeb07d6f044bc509325e1f5b10b1d301c800a17201c03a63')">A) Berlin</button>
+                    <button class="p-2 rounded-lg border text-left" onclick="checkAnswer(this, 'd62f225d09595608eeb07d6f044bc509325e1f5b10b1d301c800a17201c03a63')">B) Madrid</button>
+                    <button class="p-2 rounded-lg border text-left" onclick="checkAnswer(this, 'd62f225d09595608eeb07d6f044bc509325e1f5b10b1d301c800a17201c03a63')">C) Paris</button>
+                    <button class="p-2 rounded-lg border text-left" onclick="checkAnswer(this, 'd62f225d09595608eeb07d6f044bc509325e1f5b10b1d301c800a17201c03a63')">D) Rome</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible Section 2 -->
+        <div class="mb-4">
+            <!-- Header for the collapsible section -->
+            <div class="collapsible-header p-4 rounded-lg flex justify-between items-center">
+                <span>Question 2</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-3-7h6a1 1 0 010 2H7a1 1 0 110-2z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <!-- Content that will be collapsed/expanded -->
+            <div class="collapsible-content mt-2 rounded-lg">
+                <p class="py-4">Which planet is known as the Red Planet?</p>
+                <div class="flex flex-col space-y-2">
+                    <button class="p-2 rounded-lg border text-left" onclick="checkAnswer(this, '7591ddf2b6cbb7ff3e5eb4a9b26e0df0de13ff1c29e163d4f9dbeeb062023179')">A) Venus</button>
+                    <button class="p-2 rounded-lg border text-left" onclick="checkAnswer(this, '7591ddf2b6cbb7ff3e5eb4a9b26e0df0de13ff1c29e163d4f9dbeeb062023179')">B) Mars</button>
+                    <button class="p-2 rounded-lg border text-left" onclick="checkAnswer(this, '7591ddf2b6cbb7ff3e5eb4a9b26e0df0de13ff1c29e163d4f9dbeeb062023179')">C) Jupiter</button>
+                    <button class="p-2 rounded-lg border text-left" onclick="checkAnswer(this, '7591ddf2b6cbb7ff3e5eb4a9b26e0df0de13ff1c29e163d4f9dbeeb062023179')">D) Saturn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add more questions as needed -->
+
+    </div>
+
+    <script>
+        // Handles the click event on each collapsible header
+        document.querySelectorAll('.collapsible-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const content = this.nextElementSibling; // Selects the content div next to the clicked header
+
+                // Toggles the max-height to either expand or collapse the content
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null; // Collapses the content
+                    this.querySelector('svg').classList.remove('rotate'); // Rotates the icon back to original position
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px'; // Expands the content based on its scroll height
+                    this.querySelector('svg').classList.add('rotate'); // Rotates the icon 180 degrees
+                }
+            });
+        });
+
+        // Function to check if the selected answer is correct
+        function checkAnswer(button, hashedCorrectAnswer) {
+            const userAnswer = button.textContent.trim().slice(3); // Extracts the answer text after the letter (A), (B), etc.
+            const hashedUserAnswer = CryptoJS.SHA256(userAnswer).toString(); // Hash the user's answer
+
+            if (hashedUserAnswer === hashedCorrectAnswer) {
+                button.classList.add("correct-answer"); // Adds green background for correct answer
+            } else {
+                button.classList.add("incorrect-answer"); // Adds dark red background for incorrect answer
+            }
+
+            // Disable all buttons after an answer is selected
+            const allButtons = button.parentElement.querySelectorAll('button');
+            allButtons.forEach(btn => {
+                btn.disabled = true; // Disable all answer buttons
+            });
+        }
+    </script>
+</body>
+</html>
